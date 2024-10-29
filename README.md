@@ -1,5 +1,7 @@
 # Cloudflare-workers/pages代理脚本
-### 本项目仅支持本地化部署，不使用订阅器、节点转换等第三方外链引用，无需担心节点订阅被外链作者查看
+### 本项目仅支持本地化部署
+### 不使用订阅器、节点转换等第三方外链引用
+### 无需担心节点订阅被外链作者查看
 --------------------------------
 ## 脚本特色：
 ### 懒人小白专用！默认节点都为CF官方IP，无需频繁更新订阅获取客户端优选IP
@@ -99,7 +101,7 @@ CF Trojan：在网页地址栏输入 https:// workers域名 或者 pages域名 �
 
 ## 五：优选IP应用
 
-如果你没有天天最高速度或者选择国家的需求，使用默认的CF官方不同地区的visa域名即可（IP落地地区都为美国）
+如果你没有天天最高速度或者选择国家的需求，使用默认的CF官方IP或者域名即可，不必更换
 
 推荐好记的懒人专属CF官方IP如下（IP落地地区都为美国，支持13个标准端口切换），称之为"冲在最前的不死IP"
 
@@ -135,6 +137,16 @@ CF Trojan：在网页地址栏输入 https:// workers域名 或者 pages域名 �
 
 通过配置变量修改，可使用他人分享的IP或者域名，也可以自行本地优选，相关优选应用与脚本可参考视频教程
 
+本地电脑端优选项目推荐（可在上面代码区直接下载）：
+
+1、CDN优选域名V23.8.18 (电脑win64)
+
+2、CF优选反代IP (电脑版)
+
+3、CF优选官方IP (美、亚、欧三地区无交互电脑版！强烈推荐！！！)
+
+4、CF优选官方IP (电脑版)
+
 注意：多个CF节点在客户端使用负载均衡或者自动选择时，建议所有应用的节点都为同一个国家地区，以避免不同国家之间的IP乱跳现象
 
 ---------------------------------
@@ -154,7 +166,7 @@ CF Trojan：在网页地址栏输入 https:// workers域名 或者 pages域名 �
 
 搭建proxyip与反代ip的脚本推荐：[x-ui-yg脚本](https://github.com/yonggekkk/x-ui-yg)、[sing-box-yg脚本](https://github.com/yonggekkk/sing-box-yg)
 
-相关操作请看[视频教程](https://youtu.be/QOnMVULADko)
+相关操作请看[视频教程高阶1](https://youtu.be/QOnMVULADko)、[视频教程高阶2](https://youtu.be/CVZStM0t8BA)
 
 ---------------------------------
 ## 七：客户端推荐
@@ -194,7 +206,9 @@ CF Trojan：在网页地址栏输入 https:// workers域名 或者 pages域名 �
 
 强烈推荐：[CF vless/trojan永久免费节点教程（六）：节点不能用，问题出在哪？多平台免费客户端设置指南及避坑说明](https://youtu.be/8E0l0nQWLxs)
 
-最新推荐：[CF vless/trojan永久免费节点最终教程（七）：全网独家演示真正的"固定IP"，解决twitch、chatgpt客户端报错问题；一键自制反代IP与ProxyIP；揭秘你被他人偷扫IP的风险](https://youtu.be/QOnMVULADko)
+高阶推荐：[CF vless/trojan永久免费节点最终教程（七）：全网独家演示真正的"固定IP"，解决twitch、chatgpt客户端报错问题；一键自制反代IP与ProxyIP；揭秘你被他人偷扫IP的风险](https://youtu.be/QOnMVULADko)
+
+高阶推荐：[CF vless/trojan永久免费节点最终教程（八）：自建全端口通用的ProxyIP，同时支持客户端地址优选反代IP，自建反代IP的最终教程](https://youtu.be/CVZStM0t8BA)
 
 [直播精选回顾：CF workers vless免费节点四大特点，节点被断流阻断问题](https://youtu.be/9OHGpWlfdJ0)
 
@@ -205,6 +219,13 @@ CF Trojan：在网页地址栏输入 https:// workers域名 或者 pages域名 �
 ---------------------------------
 ---------------------------------
 ## 优选域名、优选官方IP+反代IP一键脚本（在本地网络环境下利用termux或者ish运行）：
+
+-------------------------------------------------------------
+### CF-优选官方IP (默认美、亚、欧三地区 强烈推荐！！！)，安卓手机平板专用：
+```
+curl -sSL https://raw.githubusercontent.com/yonggekkk/Cloudflare_vless_trojan/main/cf/cf.sh -o cf.sh && chmod +x cf.sh && bash cf.sh
+```
+-------------------------------------------------------------
 
 ### CF-CDN优选公共大厂域名脚本，苹果安卓手机平板专用：
 ```
