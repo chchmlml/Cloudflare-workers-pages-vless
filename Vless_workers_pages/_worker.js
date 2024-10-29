@@ -46,6 +46,10 @@ let PT13 = '2096'
 let proxyIP = proxyIPs[Math.floor(Math.random() * proxyIPs.length)];
 let proxyPort = proxyIP.includes(':') ? proxyIP.split(':')[1] : '443';
 
+
+let botToken = '';
+let chatID = '';
+
 if (!isValidUUID(userID)) {
   throw new Error("uuid is not valid");
 }
@@ -59,7 +63,11 @@ export default {
    */
   async fetch(request, env, ctx) {
     try {
-      const { proxyip } = env;
+      const { 
+	      proxyip,
+	      TG_TOKEN,
+	      TG_ID
+      } = env;
       userID = env.uuid || userID;
 			if (proxyip) {
 				if (proxyip.includes(']:')) {
@@ -113,6 +121,10 @@ export default {
 	  PT11 = env.pt11 || PT11;
 	  PT12 = env.pt12 || PT12;
 	  PT13 = env.pt13 || PT13;
+
+	    botToken = (TG_TOKEN || botToken);
+			chatID = (TG_ID || chatID);
+	    
       const upgradeHeader = request.headers.get("Upgrade");
       const url = new URL(request.url);
       if (!upgradeHeader || upgradeHeader !== "websocket") {
@@ -155,6 +167,13 @@ export default {
 			});
 		}
 		case `/${userID}/pty`: {
+
+			await sendMessage(
+				`#获取pty订阅`,
+				request.headers.get('CF-Connecting-IP'),
+				`UA: ${userAgent}\n域名: ${url.hostname}\n入口: ${url.pathname + url.search}`
+					);
+			
 			const ptyConfig = getptyConfig(userID, request.headers.get('Host'));
 			return new Response(`${ptyConfig}`, {
 				status: 200,
@@ -165,6 +184,14 @@ export default {
 		}
 		case `/${userID}/pcl`: {
 			const pclConfig = getpclConfig(userID, request.headers.get('Host'));
+
+			
+			await sendMessage(
+				`#获取pcl订阅`,
+				request.headers.get('CF-Connecting-IP'),
+				`UA: ${userAgent}\n域名: ${url.hostname}\n入口: ${url.pathname + url.search}`
+					);
+			
 			return new Response(`${pclConfig}`, {
 				status: 200,
 				headers: {
@@ -173,6 +200,14 @@ export default {
 			});
 		}
 		case `/${userID}/psb`: {
+
+			
+			await sendMessage(
+				`#获取psb订阅`,
+				request.headers.get('CF-Connecting-IP'),
+				`UA: ${userAgent}\n域名: ${url.hostname}\n入口: ${url.pathname + url.search}`
+					);
+			
 			const psbConfig = getpsbConfig(userID, request.headers.get('Host'));
 			return new Response(`${psbConfig}`, {
 				status: 200,
@@ -830,6 +865,52 @@ async function handleUDPOutBound(webSocket, vlessResponseHeader, log) {
     },
   };
 }
+
+const API_URL = 'http://ip-api.com/json/';
+const TELEGRAM_API_URL = 'https://api.telegram.org/bot';
+/**
+ * Send message to Telegram channel
+ * @param {string} type 
+ * @param {string} ip I
+ * @param {string} [add_data=""] 
+ */
+async function sendMessage(type, ip, add_data = "") {
+	if (botToken && chatID) {
+		try {
+			const ipResponse = await fetch(`${API_URL}${ip}?lang=zh-CN`);
+			let msg = `${type}\nIP: ${ip}\n${add_data}`;
+
+			if (ipResponse.ok) {
+				const ipInfo = await ipResponse.json();
+				msg = `${type}\nIP: ${ip}\n国家: ${ipInfo.country}\n城市: ${ipInfo.city}\n组织: ${ipInfo.org}\nASN: ${ipInfo.as}\n${add_data}`;
+			} else {
+				console.error(`Failed to fetch IP info. Status: ${ipResponse.status}`);
+			}
+
+			const telegramUrl = `${TELEGRAM_API_URL}${botToken}/sendMessage`;
+			const params = new URLSearchParams({
+				chat_id: chatID,
+				parse_mode: 'HTML',
+				text: msg
+			});
+
+			await fetch(`${telegramUrl}?${params.toString()}`, {
+				method: 'GET',
+				headers: {
+					'Accept': 'text/html,application/xhtml+xml,application/xml',
+					'Accept-Encoding': 'gzip, deflate, br',
+					'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.72 Safari/537.36'
+				}
+			});
+
+		} catch (error) {
+			console.error('Error sending message:', error);
+		}
+	} else {
+		console.warn('botToken or chatID is missing.');
+	}
+}
+
 
 /**
  *
