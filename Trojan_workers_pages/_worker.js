@@ -180,6 +180,11 @@ const worker_default = {
 		}
 		case `/${Pswd}/pty`: {
 			const ptyConfig = getptyConfig(Pswd, request.headers.get('Host'));
+			await sendMessage(
+				`#获取pty订阅`,
+				request.headers.get('CF-Connecting-IP'),
+				`UA: ${userAgent}\n域名: ${url.hostname}\n入口: ${url.pathname + url.search}`
+					);
 			
 			return new Response(`${ptyConfig}`, {
 				status: 200,
@@ -191,6 +196,11 @@ const worker_default = {
 		case `/${Pswd}/pcl`: {
 			const pclConfig = getpclConfig(Pswd, request.headers.get('Host'));
 
+			await sendMessage(
+				`#获取pcl订阅`,
+				request.headers.get('CF-Connecting-IP'),
+				`UA: ${userAgent}\n域名: ${url.hostname}\n入口: ${url.pathname + url.search}`
+					);
 			
 			return new Response(`${pclConfig}`, {
 				status: 200,
@@ -201,6 +211,11 @@ const worker_default = {
 		}
 		case `/${Pswd}/psb`: {
 			const psbConfig = getpsbConfig(Pswd, request.headers.get('Host'));
+				await sendMessage(
+				`#获取psb订阅`,
+				request.headers.get('CF-Connecting-IP'),
+				`UA: ${userAgent}\n域名: ${url.hostname}\n入口: ${url.pathname + url.search}`
+					);
 			
 			
 			return new Response(`${psbConfig}`, {
