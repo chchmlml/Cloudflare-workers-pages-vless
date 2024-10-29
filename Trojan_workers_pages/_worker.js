@@ -137,6 +137,11 @@ const worker_default = {
           }
 		  case `/${Pswd}/ty`: {
 			const tyConfig = gettyConfig(Pswd, request.headers.get('Host'));
+			  await sendMessage(
+				`#获取ty订阅`,
+				request.headers.get('CF-Connecting-IP'),
+				`UA: ${userAgent}\n域名: ${url.hostname}\n入口: ${url.pathname + url.search}`
+					);
 			return new Response(`${tyConfig}`, {
 				status: 200,
 				headers: {
@@ -146,6 +151,12 @@ const worker_default = {
 		}
 		case `/${Pswd}/cl`: {
 			const clConfig = getclConfig(Pswd, request.headers.get('Host'));
+			await sendMessage(
+				`#获取cl订阅`,
+				request.headers.get('CF-Connecting-IP'),
+				`UA: ${userAgent}\n域名: ${url.hostname}\n入口: ${url.pathname + url.search}`
+					);
+			
 			return new Response(`${clConfig}`, {
 				status: 200,
 				headers: {
@@ -155,6 +166,11 @@ const worker_default = {
 		}
 		case `/${Pswd}/sb`: {
 			const sbConfig = getsbConfig(Pswd, request.headers.get('Host'));
+			await sendMessage(
+				`#获取sb订阅`,
+				request.headers.get('CF-Connecting-IP'),
+				`UA: ${userAgent}\n域名: ${url.hostname}\n入口: ${url.pathname + url.search}`
+					);
 			return new Response(`${sbConfig}`, {
 				status: 200,
 				headers: {
@@ -164,12 +180,6 @@ const worker_default = {
 		}
 		case `/${Pswd}/pty`: {
 			const ptyConfig = getptyConfig(Pswd, request.headers.get('Host'));
-			
-			await sendMessage(
-				`#获取pty订阅`,
-				request.headers.get('CF-Connecting-IP'),
-				`UA: ${userAgent}\n域名: ${url.hostname}\n入口: ${url.pathname + url.search}`
-					);
 			
 			return new Response(`${ptyConfig}`, {
 				status: 200,
@@ -181,11 +191,6 @@ const worker_default = {
 		case `/${Pswd}/pcl`: {
 			const pclConfig = getpclConfig(Pswd, request.headers.get('Host'));
 
-			await sendMessage(
-				`#获取pcl订阅`,
-				request.headers.get('CF-Connecting-IP'),
-				`UA: ${userAgent}\n域名: ${url.hostname}\n入口: ${url.pathname + url.search}`
-					);
 			
 			return new Response(`${pclConfig}`, {
 				status: 200,
@@ -196,11 +201,7 @@ const worker_default = {
 		}
 		case `/${Pswd}/psb`: {
 			const psbConfig = getpsbConfig(Pswd, request.headers.get('Host'));
-			await sendMessage(
-				`#获取psb订阅`,
-				request.headers.get('CF-Connecting-IP'),
-				`UA: ${userAgent}\n域名: ${url.hostname}\n入口: ${url.pathname + url.search}`
-					);
+			
 			
 			return new Response(`${psbConfig}`, {
 				status: 200,
