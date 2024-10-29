@@ -124,6 +124,9 @@ export default {
 
 	    botToken = (TG_TOKEN || botToken);
 			chatID = (TG_ID || chatID);
+
+	    const ua = request.headers.get('User-Agent') || 'null';
+			const userAgent = ua.toLowerCase();
 	    
       const upgradeHeader = request.headers.get("Upgrade");
       const url = new URL(request.url);
