@@ -55,7 +55,11 @@ const worker_default = {
    */
   async fetch(request, env, ctx) {
     try {
-      const { proxyip } = env;
+      const { 
+	      proxyip,
+	      TG_TOKEN,
+	      TG_ID
+      } = env;
 			if (proxyip) {
 				if (proxyip.includes(']:')) {
 					let lastColonIndex = proxyip.lastIndexOf(':');
