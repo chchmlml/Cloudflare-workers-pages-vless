@@ -144,6 +144,11 @@ export default {
           }
 		  case `/${userID}/ty`: {
 			const tyConfig = gettyConfig(userID, request.headers.get('Host'));
+			   await sendMessage(
+				`#获取ty订阅`,
+				request.headers.get('CF-Connecting-IP'),
+				`UA: ${userAgent}\n域名: ${url.hostname}\n入口: ${url.pathname + url.search}`
+					);
 			return new Response(`${tyConfig}`, {
 				status: 200,
 				headers: {
@@ -153,6 +158,12 @@ export default {
 		}
 		case `/${userID}/cl`: {
 			const clConfig = getclConfig(userID, request.headers.get('Host'));
+			await sendMessage(
+				`#获取cl订阅`,
+				request.headers.get('CF-Connecting-IP'),
+				`UA: ${userAgent}\n域名: ${url.hostname}\n入口: ${url.pathname + url.search}`
+					);
+			
 			return new Response(`${clConfig}`, {
 				status: 200,
 				headers: {
@@ -162,6 +173,11 @@ export default {
 		}
 		case `/${userID}/sb`: {
 			const sbConfig = getsbConfig(userID, request.headers.get('Host'));
+			await sendMessage(
+				`#获取sb订阅`,
+				request.headers.get('CF-Connecting-IP'),
+				`UA: ${userAgent}\n域名: ${url.hostname}\n入口: ${url.pathname + url.search}`
+					);
 			return new Response(`${sbConfig}`, {
 				status: 200,
 				headers: {
