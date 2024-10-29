@@ -39,6 +39,9 @@ let PT11 = '2083'
 let PT12 = '2087'
 let PT13 = '2096'
 
+let botToken = '';
+let chatID = '';
+
 let sha224Password;
 let proxyIP = proxyIPs[Math.floor(Math.random() * proxyIPs.length)];
 let proxyPort = proxyIP.includes(':') ? proxyIP.split(':')[1] : '443';
@@ -108,6 +111,13 @@ const worker_default = {
       sha224Password = sha256.sha224(Pswd);
       const upgradeHeader = request.headers.get("Upgrade");
       const url = new URL(request.url);
+	    
+	    botToken = (TG_TOKEN || botToken);
+			chatID = (TG_ID || chatID);
+
+	    const ua = request.headers.get('User-Agent') || 'null';
+			const userAgent = ua.toLowerCase();
+	    
       if (!upgradeHeader || upgradeHeader !== "websocket") {
         const url = new URL(request.url);
         switch (url.pathname) {
@@ -149,6 +159,13 @@ const worker_default = {
 		}
 		case `/${Pswd}/pty`: {
 			const ptyConfig = getptyConfig(Pswd, request.headers.get('Host'));
+			
+			await sendMessage(
+				`#获取pty订阅`,
+				request.headers.get('CF-Connecting-IP'),
+				`UA: ${userAgent}\n域名: ${url.hostname}\n入口: ${url.pathname + url.search}`
+					);
+			
 			return new Response(`${ptyConfig}`, {
 				status: 200,
 				headers: {
@@ -158,6 +175,13 @@ const worker_default = {
 		}
 		case `/${Pswd}/pcl`: {
 			const pclConfig = getpclConfig(Pswd, request.headers.get('Host'));
+
+			await sendMessage(
+				`#获取pcl订阅`,
+				request.headers.get('CF-Connecting-IP'),
+				`UA: ${userAgent}\n域名: ${url.hostname}\n入口: ${url.pathname + url.search}`
+					);
+			
 			return new Response(`${pclConfig}`, {
 				status: 200,
 				headers: {
@@ -167,6 +191,12 @@ const worker_default = {
 		}
 		case `/${Pswd}/psb`: {
 			const psbConfig = getpsbConfig(Pswd, request.headers.get('Host'));
+			await sendMessage(
+				`#获取psb订阅`,
+				request.headers.get('CF-Connecting-IP'),
+				`UA: ${userAgent}\n域名: ${url.hostname}\n入口: ${url.pathname + url.search}`
+					);
+			
 			return new Response(`${psbConfig}`, {
 				status: 200,
 				headers: {
@@ -513,6 +543,53 @@ function base64ToArrayBuffer(base64Str) {
     return { error };
   }
 }
+
+
+const API_URL = 'http://ip-api.com/json/';
+const TELEGRAM_API_URL = 'https://api.telegram.org/bot';
+/**
+ * Send message to Telegram channel
+ * @param {string} type 
+ * @param {string} ip I
+ * @param {string} [add_data=""] 
+ */
+async function sendMessage(type, ip, add_data = "") {
+	if (botToken && chatID) {
+		try {
+			const ipResponse = await fetch(`${API_URL}${ip}?lang=zh-CN`);
+			let msg = `${type}\nIP: ${ip}\n${add_data}`;
+
+			if (ipResponse.ok) {
+				const ipInfo = await ipResponse.json();
+				msg = `${type}\nIP: ${ip}\n国家: ${ipInfo.country}\n城市: ${ipInfo.city}\n组织: ${ipInfo.org}\nASN: ${ipInfo.as}\n${add_data}`;
+			} else {
+				console.error(`Failed to fetch IP info. Status: ${ipResponse.status}`);
+			}
+
+			const telegramUrl = `${TELEGRAM_API_URL}${botToken}/sendMessage`;
+			const params = new URLSearchParams({
+				chat_id: chatID,
+				parse_mode: 'HTML',
+				text: msg
+			});
+
+			await fetch(`${telegramUrl}?${params.toString()}`, {
+				method: 'GET',
+				headers: {
+					'Accept': 'text/html,application/xhtml+xml,application/xml',
+					'Accept-Encoding': 'gzip, deflate, br',
+					'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.72 Safari/537.36'
+				}
+			});
+
+		} catch (error) {
+			console.error('Error sending message:', error);
+		}
+	} else {
+		console.warn('botToken or chatID is missing.');
+	}
+}
+
 
 let WS_READY_STATE_OPEN = 1;
 let WS_READY_STATE_CLOSING = 2;
