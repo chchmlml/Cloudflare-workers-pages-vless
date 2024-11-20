@@ -64,6 +64,7 @@ export default {
   async fetch(request, env, ctx) {
     try {
       const { 
+	      uuid,
 	      proxyip,
 	      TG_TOKEN,
 	      TG_ID
