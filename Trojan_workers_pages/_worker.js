@@ -56,6 +56,7 @@ const worker_default = {
   async fetch(request, env, ctx) {
     try {
       const { 
+	      pswd,
 	      proxyip,
 	      TG_TOKEN,
 	      TG_ID
